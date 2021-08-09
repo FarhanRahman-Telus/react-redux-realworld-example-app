@@ -1,0 +1,25 @@
+--- 
+  images: 
+    - "gcr.io/${_REPO_ID}/cio-network-capacity-bi-np-0e/example_app:$TAG_NAME"
+  steps: 
+    - 
+      args: 
+        - build
+        - "--tag=gcr.io/${_REPO_ID}/cio-network-capacity-bi-np-0e/example_app:$TAG_NAME"
+        - "-f"
+        - Dockerfile
+        - "."
+      dir: "${_BASE_DIR}"
+      name: gcr.io/cloud-builders/docker
+    - 
+      args: 
+        - cp
+        - "-Z"
+        - helm/*
+        - "gs://${_REPO_ID}-kubernetes-manifests/cio-network-capacity-bi-np-0e/"
+      dir: "${_BASE_DIR}"
+      name: gcr.io/cloud-builders/gsutil
+  substitutions: 
+    _BASE_DIR: ~
+    _REPO_ID: cio-gke-devops-e4993356
+  timeout: 600s

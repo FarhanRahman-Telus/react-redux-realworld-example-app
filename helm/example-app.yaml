@@ -1,0 +1,83 @@
+# Default values for helm-chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+applicationName: example_app
+environment: np
+replicaCount: 1
+namespace: network-capacity-bi
+ingressClass: nginx-ingress-protected
+
+#TELUS Labels/Annotations
+telus:
+  cmdbId: ""
+  costCentre: ""
+  organization: "CIO"
+  mailingList: "farhan.rahman@telus.com"
+
+#ConfigMap Entries
+configMap: {}
+
+volumes: |
+  - name: env
+    emptyDir: {}
+volumeMounts:
+  - name: env
+    path: /etc/config
+
+#Secret Entries
+secrets: {}
+
+image:
+  repository: gcr.io/cio-gke-devops-e4993356/cio-network-capacity-bi-np-0e/example_app
+  tag: latest
+  pullPolicy: IfNotPresent
+
+containerPort: 8080
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  periodSeconds: 20
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 8080
+  periodSeconds: 5
+  successThreshold: 1
+  timeoutSeconds: 3
+
+liveManifestCalls: true
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: true
+  path: /example-app/?(.*)
+  hosts:
+    - 'capacityse-np.cloudapps.telus.com'
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+initContainers: |
+  - name: gcloud-init
+    image: google/cloud-sdk:alpine
+    volumeMounts:
+      - name: env
+        mountPath: /etc/config
+    command: ["/bin/sh", "-c"]
+    args:
+      - echo DB_API_URL=$(gcloud secrets versions access latest --secret=DB_API_URL --project=cio-network-capacity-bi-np-0e) >> /etc/config/.env;
+        echo SPLUNK_API_URL=$(gcloud secrets versions access latest --secret=SPLUNK_API_URL --project=cio-network-capacity-bi-np-0e) >> /etc/config/.env;
+        echo KONG_AUTH_URL=$(gcloud secrets versions access latest --secret=KONG_AUTH_URL --project=cio-network-capacity-bi-np-0e) >> /etc/config/.env;
+        echo KONG_CLIENT_ID=$(gcloud secrets versions access latest --secret=KONG_CLIENT_ID --project=cio-network-capacity-bi-np-0e) >> /etc/config/.env;
+        echo KONG_CLIENT_SECRET=$(gcloud secrets versions access latest --secret=KONG_CLIENT_SECRET --project=cio-network-capacity-bi-np-0e) >> /etc/config/.env;
+        echo KONG_SCOPE=$(gcloud secrets versions access latest --secret=KONG_SCOPE --project=cio-network-capacity-bi-np-0e) >> /etc/config/.env;
