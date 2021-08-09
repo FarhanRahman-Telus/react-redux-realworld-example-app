@@ -9,7 +9,7 @@
         - "-f"
         - dockerfile
         - "."
-      dir: "/"
+      dir: ""
       name: gcr.io/cloud-builders/docker
     - 
       args: 
