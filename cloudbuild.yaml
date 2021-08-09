@@ -7,9 +7,9 @@
         - build
         - "--tag=gcr.io/${_REPO_ID}/cio-network-capacity-bi-np-0e/example_app:$TAG_NAME"
         - "-f"
-        - Dockerfile
+        - dockerfile
         - "."
-      dir: "${_BASE_DIR}"
+      dir: "/"
       name: gcr.io/cloud-builders/docker
     - 
       args: 
