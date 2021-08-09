@@ -1,7 +1,7 @@
 # Default values for helm-chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-applicationName: example_app
+applicationName: example-app
 environment: np
 replicaCount: 1
 namespace: network-capacity-bi
