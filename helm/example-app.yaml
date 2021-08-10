@@ -32,18 +32,18 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
 
-containerPort: 8080
+containerPort: 80
 
 livenessProbe:
   httpGet:
     path: /
-    port: 8080
+    port: 80
   periodSeconds: 20
 
 readinessProbe:
   httpGet:
     path: /
-    port: 8080
+    port: 80
   periodSeconds: 5
   successThreshold: 1
   timeoutSeconds: 3
@@ -52,7 +52,7 @@ liveManifestCalls: true
 
 service:
   type: ClusterIP
-  port: 8080
+  port: 80
 
 ingress:
   enabled: true
