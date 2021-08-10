@@ -1,5 +1,4 @@
 # The first instruction is what image we want to base our container on
-# We Use an official Node version 10 image as a parent image
 FROM tiangolo/node-frontend:10 as build-stage
 
 # Create app directory for Real World React example app
